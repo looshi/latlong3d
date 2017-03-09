@@ -11,10 +11,10 @@ WorldView.FLAG = 'flag'
 WorldView.WIDTH = 'width'
 WorldView.HEIGHT = 'height'
 WorldView.BOTH = 'both'
-WorldView.EARTH_RADIUS = 100
 
 const VECTOR_ZERO = new THREE.Vector3()  // 0,0,0 point
 const DEFAULT_TEXTURE = '/packages/looshi_worldview/assets/earthmap4k.jpg'
+const EARTH_RADIUS = 100
 
 export default class World {
   constructor (options = {}) {
@@ -116,9 +116,9 @@ export default class World {
     let dW = domNode.clientWidth
     let dH = domNode.clientHeight
     this.renderer.setSize(dW, dH)
-    let cameraFar = WorldView.EARTH_RADIUS * 6 // distance from camera to render
+    let cameraFar = EARTH_RADIUS * 6 // distance from camera to render
     this.camera = new THREE.PerspectiveCamera(45, dW / dH, 1, cameraFar)
-    this.camera.position.z = WorldView.EARTH_RADIUS * 4
+    this.camera.position.z = EARTH_RADIUS * 4
     this.controls = new THREE.OrbitControls(this.camera, domNode)
     this.controls.damping = 0.2
     this.controls.addEventListener('change', this.renderCameraMove)
@@ -292,18 +292,18 @@ export default class World {
           itemColor = WorldView.stringToHex(itemColor)
         }
 
-        const options = new WorldView.ItemOptions({
-          lat: data[LAT],
-          long: data[LONG],
-          color: itemColor,
-          amount: data[AMOUNT],
-          label: data[LABEL],
-          opacity: s.opacity,
-          scale: s.scale,
-          grow: s.grow,
-          girth: s.girth,
-          height: s.height
-        })
+        const options = {
+          lat: data[LAT] || 0,
+          long: data[LONG] || 0,
+          color: itemColor || 0xffffff,
+          amount: data[AMOUNT] || 1,
+          label: data[LABEL] || '',
+          opacity: s.opacity || 1,
+          scale: s.scale || 1,
+          grow: s.grow || 'height',
+          girth: s.girth || 1,
+          height: s.height || 1
+        }
 
         if (s.type === WorldView.PIN) this.addPin(options)
         if (s.type === WorldView.FLAG) this.addFlag(options)
